@@ -1,0 +1,15 @@
+#!/bin/bash
+# $1 First directory scanned for files, I don't check the type of the files
+# $2 Output directory of Transcoded files
+# I don't erased for now since transcoding is far too unstable...
+
+#### 
+i=1
+find "$1" -type f  -print0 | while IFS= read -r -d $'\0' line; 
+do     
+	name=$(basename "$line" ".mkv");
+	echo "$i - $name"	
+	nice -n 20 transcode $line "$2"/$name.avi
+	i=$((++i))
+done
+
