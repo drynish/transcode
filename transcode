@@ -5,11 +5,11 @@
 if [ "$#" -ne 2 ]; then
     echo "usage: trancode source destination"
 else
-	gst-launch-1.0 filesrc location="$1" ! decodebin name=demux demux. ! \
-	queue max-size-buffers=0 ! videoconvert ! videocrop bottom=4 top=4 ! videoconvert ! \
+	gst-launch-1.0 filesrc location="$1" ! matroskademux name=demux demux. ! \
+	queue ! mpegvideoparse ! omxmpeg2videodec ! videocrop bottom=4 top=4 ! videoconvert ! \
 	omxh264enc control-rate=variable target-bitrate=3000000 ! \
 	"video/x-h264,profile=high" ! h264parse ! \
-	progressreport update-freq=60 ! mux. demux. ! queue max-size-buffers=0 ! \
-	audioconvert ! "audio/x-raw,format=F32LE" ! avenc_ac3 bitrate=192000 ! \
-	mux. avimux name=mux ! filesink location="$2"
+	progressreport ! \
+	mux. demux. ! queue ! ac3parse !\
+	avimux name=mux ! filesink location="$2"
 fi
