@@ -1,0 +1,7 @@
+#!/bin/sh
+# $1 is first argument from command line (origin file)
+# $2 is the second one (transcoded one)
+
+HandBrakeCLI -i "$1" -o "$2" -Z "High Profile" -E copy
+
+# ffmpeg -i $1 -c:v libx264 -preset slow -qp 0 -c:a copy $2

@@ -1,7 +1,12 @@
-#!/bin/sh
-# $1 is first argument from command line (origin file)
-# $2 is the second one (transcoded one)
+#!/bin/bash
 
-HandBrakeCLI -i "$1" -o "$2" -Z "High Profile" -E copy
 
-# ffmpeg -i $1 -c:v libx264 -preset slow -qp 0 -c:a copy $2
+oldname="$3" newname=${oldname/\.ts/\.mkv} 
+newfile=/mnt/disk2/Series/"$2"/"$newname"
+
+mkdir /mnt/disk2/Series/"$2"
+
+gst-launch-1.0 filesrc location="$1" ! tsdemux name=demux ! queue ! ac3parse ! matroskamux name=file ! progressreport ! filesink location="$newfile" demux. ! \
+queue ! mpegvideoparse ! omxmpeg2videodec ! omxh264enc control-rate=variable target-bitrate=5000000 ! "video/x-h264,profile=high,alignment=au" ! h264parse ! file. 
+
+ln -s "$newfile" "$1"
