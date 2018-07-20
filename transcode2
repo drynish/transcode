@@ -1,11 +1,11 @@
 #!/bin/bash
 
+echo "$1"
 
-oldname="$3" newname=${oldname/\.ts/\.mp4} 
+
+oldname="$3" newname=${oldname/\.ts/\.mkv} 
 newfile=/mnt/disk2/Series/"$2"/"$newname"
 
 mkdir /mnt/disk2/Series/"$2"
 
-yes | /usr/local/bin/ffmpeg -vcodec mpeg2_mmal -i "$1" -c:a copy -c:v:0 h264_omx -b:v 4000K -r 30 "$newfile" && rm -rf "$1"
-
-ln -s "$newfile" "$1"
+/usr/local/bin/ffmpeg -y -nostdin -vcodec mpeg2_mmal -i "$1" -c:a copy -c:v:0 h264_omx -b:v 5000K -r 30 "$newfile" && rm -rf "$1" && ln -s "$newfile" "$1"
